@@ -9,8 +9,8 @@ function createProject(level: number): Project {
   return {
     code: String.fromCharCode(65 + Math.floor(Math.random() * 26)),
     scale: 5 + Math.floor(level * 4 * Math.random()),
-    difficulty: 1 + Math.floor(level * Math.random()),
-    money: 2 + Math.floor(level * 2 * Math.random()),
+    difficulty: 2 + Math.floor(level * 1.4 * Math.random()),
+    money: 2 + Math.floor(level * 1.4 * Math.random()),
   }
 }
 

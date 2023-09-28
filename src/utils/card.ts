@@ -78,9 +78,9 @@ function pickCardFromPoll(poll: Card[]) {
 function pickCard(opportunity: number) {
   // 0 -> 100
   // 100 -> 10
-  const legendaryProbability = Math.max(Math.sqrt(opportunity) + 1, 0) / 100
-  const epicProbability = Math.max(Math.sqrt(opportunity) + 1, 0) / 50
-  const rareProbability = Math.max(Math.sqrt(opportunity) + 1, 0) / 10
+  const legendaryProbability = Math.max(Math.sqrt(Math.max(opportunity, 0)) + 1, 0) / 100
+  const epicProbability = Math.max(Math.sqrt(Math.max(opportunity, 0)) + 1, 0) / 50
+  const rareProbability = Math.max(Math.sqrt(Math.max(opportunity, 0)) + 1, 0) / 10
   const randomNumber = Math.random()
   if (randomNumber < legendaryProbability) {
     return pickCardFromPoll(CARD_POOL.filter(card => card.rarity === 'legendary'))
