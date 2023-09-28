@@ -22,17 +22,17 @@ const emit = defineEmits<{
 const MAX_COUNT = 4
 
 let times = $ref(0)
-let randomCard = $ref<Card[]>([])
+let randomCards = $ref<Card[]>([])
 
 const rollingPrice = $computed(() => Math.round(level * 2 * 1.25 ** times))
 
 function roll() {
-  randomCard = pickCards(properties.opportunity, MAX_COUNT - lockedCards.length)
+  randomCards = pickCards(properties.opportunity, MAX_COUNT - lockedCards.length)
   emit('roll', rollingPrice)
   times += 1
 }
 
-const cards = $computed(() => [...lockedCards, ...randomCard])
+const cards = $computed(() => [...lockedCards, ...randomCards])
 
 function select(index: number) {
   emit('select', cards[index])
@@ -40,7 +40,19 @@ function select(index: number) {
     emit('update:lockedCards', lockedCards.filter((card, groupIndex) => groupIndex !== index))
   } else {
     const randomIndex = index - lockedCards.length
-    randomCard = randomCard.filter((card, groupIndex) => groupIndex !== randomIndex)
+    randomCards = randomCards.filter((card, groupIndex) => groupIndex !== randomIndex)
+  }
+}
+
+function lock(index: number, locked: boolean) {
+  const target = cards[index]
+  if (locked) {
+    const randomIndex = index - lockedCards.length
+    emit('update:lockedCards', lockedCards.concat([target]))
+    randomCards = randomCards.filter((card, groupIndex) => groupIndex !== randomIndex)
+  } else {
+    emit('update:lockedCards', lockedCards.filter((card, groupIndex) => groupIndex !== index))
+    randomCards = [target].concat(randomCards)
   }
 }
 
@@ -59,10 +71,12 @@ onMounted(() => {
     <RSpace>
       <CardCard
         v-for="(card, index) in cards"
-        :key="index"
+        :key="`${index}:${lockedCards.length}`"
         :card="card"
         :disabled="properties.money < card.price"
-        @click="select(index)"
+        :locked="index < lockedCards.length"
+        @update:locked="lock(index, $event)"
+        @select="select(index)"
       />
     </RSpace>
     <template #footer>

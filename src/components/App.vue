@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { RSpace } from 'roughness'
+import { RGridGuide, RSpace } from 'roughness'
 import { reactive, watchEffect } from 'vue'
 import type { Card } from '../utils/card'
 import { validateCards } from '../utils/card'
@@ -59,7 +59,8 @@ watchEffect(() => {
 
 <template>
   <div class="app">
-    <RSpace vertical>
+    <RGridGuide />
+    <RSpace vertical class="container">
       <PersonInfo
         :properties="properties"
         :condition="condition"
@@ -91,9 +92,15 @@ watchEffect(() => {
 
 <style lang="scss" scoped>
 :global(body) {
-  margin: 8px;
+  margin: 0;
 }
 .app {
+  padding: 8px;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+}
+.container {
   max-width: 800px;
   margin: 0 auto;
 }
