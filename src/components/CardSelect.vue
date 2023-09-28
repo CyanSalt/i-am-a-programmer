@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { RButton, RDialog, RSpace } from 'roughness'
+import { Eye, EyeOff } from 'lucide'
+import { RButton, RDialog, RIcon, RSpace } from 'roughness'
 import { onMounted } from 'vue'
 import type { Card } from '../utils/card'
 import { pickCards } from '../utils/card'
@@ -21,6 +22,7 @@ const emit = defineEmits<{
 
 const MAX_COUNT = 4
 
+let hidden = $ref(false)
 let times = $ref(0)
 let randomCards = $ref<Card[]>([])
 
@@ -56,6 +58,10 @@ function lock(index: number, locked: boolean) {
   }
 }
 
+function toggle() {
+  hidden = !hidden
+}
+
 function finish() {
   emit('finish')
 }
@@ -68,7 +74,12 @@ onMounted(() => {
 <template>
   <RDialog state="manual" :closable="false" class="card-select">
     <template #title>购买卡片</template>
-    <RSpace>
+    <template #header-end>
+      <RButton html-type="button" @click="toggle">
+        <RIcon :icon="hidden ? Eye : EyeOff" />
+      </RButton>
+    </template>
+    <RSpace v-show="!hidden">
       <CardCard
         v-for="(card, index) in cards"
         :key="`${index}:${lockedCards.length}`"

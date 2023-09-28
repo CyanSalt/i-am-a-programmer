@@ -43,6 +43,7 @@ const CARD_POOL: Card[] = [
   { name: '女朋友', rarity: 'legendary', price: 330, properties: { health: -2, mentality: 3, opportunity: 50 } },
   { name: '显示器', rarity: 'legendary', price: 320, properties: { health: 16, skill: 6, opportunity: 4 } },
   { name: '键盘', rarity: 'legendary', price: 310, properties: { health: 5, skill: 8 } },
+  { name: '房子', rarity: 'legendary', price: 2500, properties: { health: 25, mentality: 10, opportunity: 300 } },
 ]
 
 function validateCard(card: Card, ratio: number) {
