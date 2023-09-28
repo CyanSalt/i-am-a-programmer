@@ -23,10 +23,14 @@ const emit = defineEmits<{
 const MAX_COUNT = 4
 
 let hidden = $ref(false)
+let selected = $ref(false)
 let times = $ref(0)
 let randomCards = $ref<Card[]>([])
 
-const rollingPrice = $computed(() => Math.round(level * 2 * 1.25 ** times))
+const rollingPrice = $computed(() => {
+  if (!level && selected) return 2
+  return Math.round(level * 2 * 1.25 ** times)
+})
 
 function roll() {
   randomCards = pickCards(properties.opportunity, MAX_COUNT - lockedCards.length)
@@ -37,6 +41,7 @@ function roll() {
 const cards = $computed(() => [...lockedCards, ...randomCards])
 
 function select(index: number) {
+  selected = true
   emit('select', cards[index])
   if (index < lockedCards.length) {
     emit('update:lockedCards', lockedCards.filter((card, groupIndex) => groupIndex !== index))
@@ -91,7 +96,7 @@ onMounted(() => {
       />
     </RSpace>
     <template #footer>
-      <RButton html-type="button" @click="roll">换 ($ {{ rollingPrice }})</RButton>
+      <RButton html-type="button" :disabled="properties.money < rollingPrice" @click="roll">换 ($ {{ rollingPrice }})</RButton>
       <RButton html-type="button" type="primary" @click="finish">加班</RButton>
     </template>
   </RDialog>
